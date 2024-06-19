@@ -1,0 +1,1371 @@
+
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>cafeteria</title>
+    <style>
+        body {
+            background-color: #d59f7c;
+        }
+
+        .container {
+            text-align: center;
+            margin: 20px;
+        }
+
+        .line {
+            border-top: 1px solid black;
+            margin: 10px 0;
+        }
+
+        .title {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .image-container {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .circular-img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 150px;
+            width: 150px;
+            opacity: 0;
+            transition: .5s ease;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+
+        .image-container:hover .overlay {
+            opacity: 1;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .info {
+            display: none;
+            text-align: center;
+            margin: 20px;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .info.active {
+            display: block;
+            opacity: 1;
+        }
+
+        .fade-in {
+            animation: fadeIn 1s forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 1s forwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .producto {
+            position: relative;
+            display: inline-block;
+            text-align: center;
+            overflow: hidden;
+            margin-bottom: 20px;
+            border-radius: 20%;
+        }
+
+        .imagen {
+            display: block;
+        }
+
+        .info-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            padding: 10px;
+            box-sizing: border-box;
+            transition: transform 0.3s ease;
+            transform: translateY(100%);
+        }
+
+        .producto:hover .info-overlay {
+            transform: translateY(0);
+        }
+
+        .precio {
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .descripcion {
+            font-size: 14px;
+        }
+
+        .cart {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 300px;
+            background-color: #e8c8a1;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            display: none;
+        }
+
+        #cart-items {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        #cart-items li {
+            padding: 5px 0;
+            border-bottom:1px solid #000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #cart-items li:last-child {
+            border-bottom: none;
+        }
+
+        .remove-item {
+            background-color: #ff4d4d;
+            border: none;
+            padding: 5px;
+            border-radius: 50%;
+            cursor: pointer;
+            color: #fff;
+        }
+
+        .remove-item:hover {
+            background-color: #ff1a1a;
+        }
+
+        #pay-button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #9e7a4e;
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+        }
+
+        #pay-button:hover {
+            background-color: #8a673f;
+        }
+
+        .add-to-cart {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #9e7a4e;
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+        }
+
+        .add-to-cart:hover {
+            background-color: #8a673f;
+        }
+
+        /////*BANNER*////
+  *{
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .header{
+            background-image: linear-gradient(
+                rgba(0,0,0,0.7),
+                rgba(0,0,0,0.7)),
+                url(https://th.bing.com/th/id/OIP.ZZvTh3Mry0nGI6odYte7RQHaEK?rs=1&pid=ImgDetMain);
+            background-position: center bottom;
+            background-repeat: no-repeat;
+            background-size: cover;
+            min-height: 70vh;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center; 
+            text-align: center; 
+        }
+
+        .menu{
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo{
+            color: #FFFDFC;
+            font-size: 25px;
+            font-weight: 800;
+        }
+
+        .header-content h1{
+            font-size: 75px;
+            line-height: 80px;
+            color: #F9FAFC;
+            text-transform: uppercase;
+            margin-bottom: 35px;
+        }
+
+        .header-content p{
+            font-size: 16px;
+            color: #C5C5C5;
+            padding: 0 20px;
+            margin-bottom: 25px;
+        }
+
+        .btn-1{
+            display: inline-block;
+            padding: 11px 35px;
+            background-color: #CE967B;
+            color: #F9FAFC;
+            text-transform: uppercase;
+        }
+
+        .btn-1:hover{
+            background-color: #ebad8d;
+        }
+        
+ .servicies{
+    background-image:linear-gradient(
+        rgba(0, 0, 0, 0.7),
+        rgba(0, 0, 0, 0.7)),
+        url(images/blog3.jpg);
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-attachment: fixed;
+        padding: 60px 0;
+        color: white;
+ } 
+ .o{
+    background-image:linear-gradient(
+        rgba(0, 0, 0, 0.7),
+        rgba(0, 0, 0, 0.7)),
+        url(images/blog3.jpg);
+      color: white;
+        padding: 60px 0;
+ } 
+ .o h2{
+    font-size: 25px;
+ }
+.u {
+    border-top: 1px solid white; /* Cambia el color de la línea a blanco */
+    margin: 10px 0;
+}
+    </style>
+</head>
+<body>
+   <div class="container" id="content">
+        <header class="header">
+            <div class="header-content container"> 
+                <h1>Menú</h1>
+                <p>Compra tu café favorito</p>
+                <a href="index.html" class="btn-1">Regresar al Inicio</a>
+            </div>
+        </header>
+        <div class="line"></div>
+        <div class="title">Bebidas</div>
+        <div class="line"></div>
+        <div class="image-container" onclick="showInfo('cafe')">
+            <img src="https://images.pexels.com/photos/312418/pexels-photo-312418.jpeg?auto=compress&cs=tinysrgb&w=600" class="circular-img">
+            <div class="overlay">Café y Bebidas a base de Café</div>
+        </div>
+        <div class="image-container" onclick="showInfo('te')">
+            <img src="https://images.pexels.com/photos/905485/pexels-photo-905485.jpeg?auto=compress&cs=tinysrgb&w=600" class="circular-img">
+            <div class="overlay">Tés y Infusiones</div>
+        </div>
+        <div class="image-container" onclick="showInfo('bebidasFrias')">
+            <img src="https://images.pexels.com/photos/6413651/pexels-photo-6413651.jpeg?auto=compress&cs=tinysrgb&w=600" class="circular-img">
+            <div class="overlay">Bebidas Frías a base de Café y Té</div>
+        </div>
+        <div class="image-container" onclick="showInfo('especiales')">
+            <img src="https://images.pexels.com/photos/3551717/pexels-photo-3551717.png?auto=compress&cs=tinysrgb&w=600" class="circular-img">
+            <div class="overlay">Bebidas Especiales</div>
+        </div>
+        <div class="image-container" onclick="showInfo('saludables')">
+            <img src="https://images.pexels.com/photos/2705644/pexels-photo-2705644.jpeg?auto=compress&cs=tinysrgb&w=600" class="circular-img">
+            <div class="overlay">Bebidas Saludables</div>
+        </div>
+<main class="servicies">
+        <div class="u"></div>
+        <div class="title">Postres</div>
+        <div class="u"></div>
+        <div class="image-container" onclick="showInfo('pasteles')">
+            <img src="https://images.pexels.com/photos/8104732/pexels-photo-8104732.jpeg?auto=compress&cs=tinysrgb&w=600" class="circular-img">
+            <div class="overlay">Pasteles y Tartas</div>
+        </div>
+        <div class="image-container" onclick="showInfo('galletas')">
+            <img src="https://images.pexels.com/photos/10190705/pexels-photo-10190705.jpeg?auto=compress&cs=tinysrgb&w=600" class="circular-img">
+            <div class="overlay">Galletas y Brownies</div>
+        </div>
+        <div class="image-container" onclick="showInfo('muffins')">
+            <img src="https://images.pexels.com/photos/15549492/pexels-photo-15549492/free-photo-of-cupcakes.jpeg?auto=compress&cs=tinysrgb&w=600" class="circular-img">
+            <div class="overlay">Muffins y Cupcakes</div>
+        </div>
+        <div class="image-container" onclick="showInfo('clasicos')">
+            <img src="https://images.pexels.com/photos/18955555/pexels-photo-18955555/free-photo-of-vaso-cristal-vidrio-azucar.jpeg?auto=compress&cs=tinysrgb&w=600" class="circular-img">
+            <div class="overlay">Postres Clásicos y Tradicionales</div>
+        </div>
+        <div class="image-container" onclick="showInfo('bolleria')">
+            <img src="https://media.istockphoto.com/id/496564915/es/foto/pan-y-buns.jpg?b=1&s=612x612&w=0&k=20&c=ACdvaxBEZvr7aHUhmPvHPJyUEA3AhDGKAs21bFIvsQo=" class="circular-img">
+            <div class="overlay">Bollería y Panadería</div>
+        </div>
+        <div class="image-container" onclick="showInfo('saludablesPostres')">
+            <img src="https://images.pexels.com/photos/128865/pexels-photo-128865.jpeg?auto=compress&cs=tinysrgb&w=600" class="circular-img">
+            <div class="overlay">Postres Saludables</div>
+        </div>
+        <div class="image-container" onclick="showInfo('helados')">
+            <img src="https://images.pexels.com/photos/6542780/pexels-photo-6542780.jpeg?auto=compress&cs=tinysrgb&w=600" class="circular-img">
+            <div class="overlay">Helados y sorbetes</div>
+        </div>
+</main>
+        <div class="line"></div>
+        <div class="title">Almuerzos</div>
+        <div class="line"></div>
+        <div class="image-container" onclick="showInfo('sandwiches')">
+            <img src="https://media.istockphoto.com/id/157431311/es/foto/s%C3%A1ndwich-de-turqu%C3%ADa.jpg?b=1&s=612x612&w=0&k=20&c=bLWPdsGOkgsP_NnnPHH0nx42aCDSlRrD6aBJ1iCMcu8=" class="circular-img">
+            <div class="overlay">Sándwiches y Bocadillos</div>
+        </div>
+        <div class="image-container" onclick="showInfo('ensaladas')">
+            <img src="https://images.pexels.com/photos/257816/pexels-photo-257816.jpeg?auto=compress&cs=tinysrgb&w=600" class="circular-img">
+            <div class="overlay">Ensaladas</div>
+        </div>
+        
+    <div class="image-container"onclick="showInfo('Brunch')">
+    <img src="https://images.pexels.com/photos/6327134/pexels-photo-6327134.jpeg?auto=compress&cs=tinysrgb&w=600"class="circular-img">
+        <div class="overlay">Opciones de Desayuno para el Almuerzo (Brunch)</div>
+    </div>
+    </div>
+<section class="content" id="menu">
+ <div class="info" id="info-cafe">
+    <main class="o">
+        <h2>Café y Bebidas a base de Café</h2>
+        
+        <h2>Espresso
+        <center>
+<div class="container">
+  <div class="producto">
+    <img class="imagen" src="https://media.istockphoto.com/id/1514624558/es/foto/verter-crema-en-una-taza-de-caf%C3%A9.jpg?s=612x612&w=0&k=20&c=V4PFqb6swLigBx9OJk89Tw3fkFc3A6QnYP7cfTvYxpc="width="170"height="170" alt="Producto">
+    <div class="info-overlay">
+      <span class="precio">$20 MXN</span>
+      <p class="descripcion">Un café concentrado y fuerte servido en una pequeña taza, perfecto para los amantes del café con prisa.</p>
+    </div> </div></div>
+<button class="add-to-cart" data-name="Espresso" data-price="20">Agregar al Carrito</button>
+</center>
+
+
+        <h2>Americano
+ <center>
+<div class="container">
+  <div class="producto">
+    <img class="imagen" src="https://media.istockphoto.com/id/1153675328/es/foto/a%C3%B1adir-crema-al-caf%C3%A9-negro.jpg?s=612x612&w=0&k=20&c=ZIor18Fil_9Gwue8KvFQ6w8MXScf7raDatFdFhwkxBg="width="170"height="170" alt="Producto">
+    <div class="info-overlay">
+      <span class="precio"> $25 MXN</span>
+      <p class="descripcion">Espresso suavizado con agua caliente, ideal para quienes prefieren un café más suave pero con sabor intenso.</p>
+    </div> </div></div>
+<button class="add-to-cart" data-name="Café Americano" data-price="25">Agregar al Carrito</button>
+</center>
+
+        <h2>Café con Leche
+        <center>
+<div class="container">
+  <div class="producto">
+    <img class="imagen" src="https://media.istockphoto.com/id/153555706/es/foto/caf%C3%A9-con-crema.jpg?s=612x612&w=0&k=20&c=jnB_6FeoDhOWNCHJby3zBlcLheVYntZ99w5xw_Rsvf8="width="170"height="170" alt="Producto">
+    <div class="info-overlay">
+      <span class="precio"> $30 MXN</span>
+      <p class="descripcion">Una mezcla equilibrada de café y leche, reconfortante y perfecta para cualquier momento del día.</p>
+    </div> </div></div>
+<button class="add-to-cart" data-name="Café con leche" data-price="30">Agregar al Carrito</button>
+</center>
+
+        <h2>Cappuccino
+
+<center>
+<div class="container">
+  <div class="producto">
+    <img class="imagen" src="https://media.istockphoto.com/id/452978133/es/foto/taza-de-caf%C3%A9.jpg?s=612x612&w=0&k=20&c=peAE0LVPzZ5miouklkfpZlr53MdgR0CsONxhRyOS_5g="width="170"height="170" alt="Producto">
+    <div class="info-overlay">
+      <span class="precio">$35 MXN</span>
+      <p class="descripcion">Espresso cubierto con una generosa capa de espuma de leche, una bebida cremosa y indulgente.</p>
+    </div> </div></div>
+<button class="add-to-cart" data-name="Cappuccino" data-price="35">Agregar al Carrito</button>
+</center>
+
+        <h2>Latte
+
+        <center>
+<div class="container">
+  <div class="producto">
+    <img class="imagen" src="https://brookrest.com/wp-content/uploads/2022/04/drinks-0223-768x512.jpg"width="170"height="170" alt="Producto">
+    <div class="info-overlay">
+      <span class="precio">$40 MXN</span>
+      <p class="descripcion">Espresso suavizado con leche caliente, perfecto para los que disfrutan de un café más suave y cremoso.</p>
+    </div> </div></div>
+<button class="add-to-cart" data-name="Latte" data-price="40">Agregar al Carrito</button>
+</center>
+
+        <h2>Macchiato
+
+        <center>
+<div class="container">
+  <div class="producto">
+    <img class="imagen" src="https://cdn-ikphbgl.nitrocdn.com/sMPWDFsBYiNFNwJEFrzZMiGgHQmpBlAc/assets/images/optimized/wp-content/uploads/2021/05/c9bb0831ed41354d62080da0e172dedf.Espresso-Macchiato-What-it-is-how-to-make-it-how-it-tastes-600x400.jpg"width="170"height="170" alt="Producto">
+    <div class="info-overlay">
+      <span class="precio">$25 MXN</span>
+      <p class="descripcion"> Espresso "manchado" con una pequeña cantidad de leche, una opción audaz para los amantes del café fuerte.</p>
+    </div> </div></div>
+<button class="add-to-cart" data-name="Macchiato" data-price="25">Agregar al Carrito</button>
+</center>
+
+        <h2>Mocha</h2>
+        <center>
+<div class="container">
+  <div class="producto">
+    <img class="imagen" src="https://i.pinimg.com/736x/76/8b/aa/768baa302c5195ddedfa35ff5ccb7fa0.jpg"width="170"height="170" alt="Producto">
+    <div class="info-overlay">
+      <span class="precio"> $45 MXN</span>
+      <p class="descripcion">Espresso con chocolate caliente y leche, coronado con crema batida, una deliciosa indulgencia para los amantes del chocolate.</p>
+    </div> </div></div>
+<button class="add-to-cart" data-name="Mocha" data-price="45">Agregar al Carrito</button>
+</center></main>
+     
+        <button onclick="goToHome()" style="background: none; border: none; cursor: pointer;">
+    <img src="https://cdn.icon-icons.com/icons2/1744/PNG/512/3643769-building-home-house-main-menu-start_113416.png" alt="Home" width="50">
+</button>
+    </div>
+    <div class="info" id="info-te">
+        <main class="o">
+        <h2>Tés y Infusiones</h2>
+
+        <h2>Té Negro
+            <center>
+<div class="container">
+  <div class="producto">
+    <img class="imagen" src="https://static.tuasaude.com/media/article/sq/td/beneficios-del-te-negro_58898_l.webp"width="170"height="170" alt="Producto">
+    <div class="info-overlay">
+      <span class="precio">$25 MXN</span>
+      <p class="descripcion">Té oxidado con un aroma distintivo y un sabor robusto, perfecto para tomar solo o con leche.</p>
+    </div> </div></div>
+<button class="add-to-cart" data-name="Té negro" data-price="25">Agregar al Carrito</button>
+</center>
+
+        <h2>Té Verde
+
+            <center>
+<div class="container">
+  <div class="producto">
+    <img class="imagen" src="https://blog.nutritienda.com/wp-content/uploads/2021/05/Fotolia_63877102_Subscription_Monthly_M-2-300x228.jpg"width="170"height="170" alt="Producto">
+    <div class="info-overlay">
+      <span class="precio"> $30 MXN</span>
+      <p class="descripcion">Té no oxidado con propiedades antioxidantes, refrescante y revitalizante.</p>
+    </div> </div></div>
+<button class="add-to-cart" data-name="Té verde" data-price="30">Agregar al Carrito</button>
+</center>
+
+        <h2>Té Blanco
+
+            <center>
+<div class="container">
+  <div class="producto">
+    <img class="imagen" src="https://img.bekiafit.com/articulos/portada/88000/88238.jpg"width="170"height="170" alt="Producto">
+    <div class="info-overlay">
+      <span class="precio"> $35 MXN</span>
+      <p class="descripcion">Té delicado y suave, mínimamente procesado para resaltar su sabor natural y floral.</p>
+    </div> </div></div>
+<button class="add-to-cart" data-name="Té blanco" data-price="35">Agregar al Carrito</button>
+</center>
+
+        <h2>Té Oolong
+            <center>
+<div class="container">
+  <div class="producto">
+    <img class="imagen" src="https://th.bing.com/th/id/OIP.b9_ExqxFrVRATyonIPzsVAHaFj?rs=1&pid=ImgDetMain"width="170"height="170" alt="Producto">
+    <div class="info-overlay">
+      <span class="precio">$40 MXN</span>
+      <p class="descripcion">Té parcialmente oxidado, con un equilibrio único entre el té verde y el negro, perfecto para los curiosos del té.</p>
+    </div> </div></div>
+<button class="add-to-cart" data-name="Té Oolong" data-price="40">Agregar al Carrito</button>
+</center>
+
+        <h2>Té de Hierbas
+            <center>
+<div class="container">
+  <div class="producto">
+    <img class="imagen" src="https://www.cardamomo.news/img/2021/04/28/tx_de_hierbabuena_crop1619624433470.jpeg?__scale=w:1200,h:675,t:2"width="170"height="170" alt="Producto">
+    <div class="info-overlay">
+      <span class="precio"> $30 MXN</span>
+      <p class="descripcion">Infusión reconfortante de hierbas, flores y frutas, perfecta para relajarse y disfrutar de momentos tranquilos.</p>
+    </div> </div></div>
+<button class="add-to-cart" data-name="Té de Hierbas" data-price="30">Agregar al Carrito</button>
+</center>
+
+        <h2>Chai
+            <center>
+<div class="container">
+  <div class="producto">
+    <img class="imagen" src="https://th.bing.com/th/id/OIP.4EDAPesbttrF5nHgmRRm7AHaDt?w=318&h=174&c=7&r=0&o=5&dpr=1.3&pid=1.7"width="170"height="170" alt="Producto">
+    <div class="info-overlay">
+      <span class="precio"> $35 MXN</span>
+      <p class="descripcion">Mezcla aromática de té negro con especias y leche, reconfortante y lleno de sabor.</p>
+    </div> </div></div>
+<button class="add-to-cart" data-name="Chai" data-price="35">Agregar al Carrito</button>
+</center></main>
+
+        </h2>
+        <button onclick="goToHome()" style="background: none; border: none; cursor: pointer;">
+    <img src="https://cdn.icon-icons.com/icons2/1744/PNG/512/3643769-building-home-house-main-menu-start_113416.png" alt="Home" width="50">
+</button>
+    </div>
+    <div class="info" id="info-bebidasFrias">
+        <main class="o">
+        <h2>Bebidas Frías a base de Café y Té</h2>
+        
+        <h2>Café Helado
+            <center>
+<div class="container">
+  <div class="producto">
+    <img class="imagen" src="https://cdn.pixabay.com/photo/2018/08/02/19/45/iced-coffee-3580312_640.jpg"width="170"height="170" alt="Producto">
+    <div class="info-overlay">
+      <span class="precio"> $35 MXN</span>
+      <p class="descripcion">Café suave y refrescante servido con hielo, perfecto para los días calurosos..</p>
+    </div> </div></div>
+<button class="add-to-cart" data-name="Café Helado" data-price="35">Agregar al Carrito</button>
+</center>
+
+        <h2>Latte Helado
+            <center>
+<div class="container">
+  <div class="producto">
+    <img class="imagen" src="https://media.istockphoto.com/id/697067530/es/foto/dulce-helado-de-granizado-de-caf%C3%A9-helado.jpg?s=612x612&w=0&k=20&c=XCp7lNZQE1OMXdj7w5vC31TqZnaNVQjZ5gsNAtMkxnI="width="170"height="170" alt="Producto">
+    <div class="info-overlay">
+      <span class="precio"> $40 MXN</span>
+      <p class="descripcion">Latte cremoso y refrescante servido con hielo, una delicia para los amantes del café frío.</p>
+    </div> </div></div>
+<button class="add-to-cart" data-name="Latte Helado" data-price="40">Agregar al Carrito</button>
+</center>
+
+        <h2>Frappe
+            <center>
+<div class="container">
+  <div class="producto">
+    <img class="imagen" src="https://cdn.pixabay.com/photo/2015/09/11/07/31/drink-935386_640.jpg"width="170"height="170" alt="Producto">
+    <div class="info-overlay">
+      <span class="precio"> $45 MXN</span>
+      <p class="descripcion">Bebida de café batida con hielo y leche, una opción indulgente para satisfacer los antojos dulces.</p>
+    </div> </div></div>
+<button class="add-to-cart" data-name="Frappe" data-price="45">Agregar al Carrito</button>
+</center>
+
+        <h2>Té Helado
+            <center>
+<div class="container">
+  <div class="producto">
+    <img class="imagen" src="https://th.bing.com/th/id/OIP.Q48C75d6FqWK2zz6PtrvuwHaGX?w=212&h=182&c=7&r=0&o=5&dpr=1.3&pid=1.7"width="170"height="170" alt="Producto">
+    <div class="info-overlay">
+      <span class="precio"> $30 MXN</span>
+      <p class="descripcion">Té fresco y revitalizante servido con hielo, perfecto para refrescarse en cualquier momento del día.</p>
+    </div> </div></div>
+<button class="add-to-cart" data-name="Té Helado" data-price="30">Agregar al Carrito</button>
+</center>
+
+        <h2>Matcha Latte Helado
+            <center>
+<div class="container">
+  <div class="producto">
+    <img class="imagen" src="https://th.bing.com/th/id/OIP.1FyIGJfUlgHGGSLPchMsQgHaLH?rs=1&pid=ImgDetMain"width="170"height="170" alt="Producto">
+    <div class="info-overlay">
+      <span class="precio"> $45 MXN</span>
+      <p class="descripcion">Té verde matcha mezclado con leche y servido con hielo, una bebida energizante y refrescante.</p>
+    </div> </div></div>
+<button class="add-to-cart" data-name="Matcha Latte Helado" data-price="45">Agregar al Carrito</button>
+</center></main>
+
+        </h2>
+       <button onclick="goToHome()" style="background: none; border: none; cursor: pointer;">
+    <img src="https://cdn.icon-icons.com/icons2/1744/PNG/512/3643769-building-home-house-main-menu-start_113416.png" alt="Home" width="50">
+</button>
+    </div>
+    <div class="info" id="info-especiales">
+          <main class="o">
+        <h2>Bebidas Especiales</h2>
+        
+            <h2>Chocolate Caliente
+                <center>
+<div class="container">
+  <div class="producto">
+    <img class="imagen" src="https://images.pexels.com/photos/3551717/pexels-photo-3551717.png?auto=compress&cs=tinysrgb&w=600"width="170"height="170" alt="Producto">
+    <div class="info-overlay">
+      <span class="precio"> $40 MXN</span>
+      <p class="descripcion">Bebida caliente y reconfortante hecha con chocolate derretido y leche, perfecta para los días fríos.</p>
+    </div> </div></div>
+<button class="add-to-cart" data-name="Chocolate Caliente" data-price="40">Agregar al Carrito</button>
+</center>
+
+            <h2>Sidra Caliente
+                <center>
+<div class="container">
+  <div class="producto">
+    <img class="imagen" src="https://th.bing.com/th/id/OIP.8xch3Bp0WuZ_c61rDDhOoAHaE8?w=245&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7"width="170"height="170" alt="Producto">
+    <div class="info-overlay">
+      <span class="precio"> $30 MXN</span>
+      <p class="descripcion">Bebida de manzana caliente con especias como canela y clavo, ideal para calentarse en el invierno.</p>
+    </div> </div></div>
+<button class="add-to-cart" data-name="Sidra Caliente" data-price="30">Agregar al Carrito</button>
+</center>
+
+            <h2>Batidos
+                <center>
+<div class="container">
+  <div class="producto">
+    <img class="imagen" src="https://images.pexels.com/photos/775030/pexels-photo-775030.jpeg?auto=compress&cs=tinysrgb&w=600"width="170"height="170" alt="Producto">
+    <div class="info-overlay">
+      <span class="precio"> $50 MXN</span>
+      <p class="descripcion">Mezcla cremosa de frutas frescas y leche, una opción deliciosa y saludable para satisfacer el antojo de algo dulce</p>
+    </div> </div></div>
+<button class="add-to-cart" data-name="Batidos" data-price="50">Agregar al Carrito</button>
+</center>
+
+            <h2>Smoothies
+                <center>
+<div class="container">
+  <div class="producto">
+    <img class="imagen" src="https://images.pexels.com/photos/4112870/pexels-photo-4112870.png?auto=compress&cs=tinysrgb&w=600"width="170"height="170" alt="Producto">
+    <div class="info-overlay">
+      <span class="precio"> $55 MXN</span>
+      <p class="descripcion">Batidos refrescantes hechos con frutas, vegetales y suplementos, una opción energizante y nutritiva para cualquier momento del día.</p>
+    </div> </div></div>
+<button class="add-to-cart" data-name="Smoothies" data-price="55">Agregar al Carrito</button>
+</center>
+</main>
+            <h2>Leche Dorada</h2>
+            <center>
+<div class="container">
+  <div class="producto">
+    <img class="imagen" src="https://clinicascres.com/wp-content/uploads/2019/02/Leche-dorada.jpg"width="170"height="170" alt="Producto">
+    <div class="info-overlay">
+      <span class="precio"> $45 MXN</span>
+      <p class="descripcion">Bebida caliente y reconfortante a base de leche con cúrcuma, jengibre y especias, perfecta para el bienestar y la relajación.</p>
+    </div> </div></div>
+<button class="add-to-cart" data-name="Leche Dorada" data-price="45">Agregar al Carrito</button>
+</center></main>
+        
+        <button onclick="goToHome()" style="background: none; border: none; cursor: pointer;">
+    <img src="https://cdn.icon-icons.com/icons2/1744/PNG/512/3643769-building-home-house-main-menu-start_113416.png" alt="Home" width="50">
+</button>
+    </div>
+    <div class="info" id="info-saludables">
+          <main class="o">
+        <h2>Bebidas Saludables</h2>
+        <ul>
+            <h2>Agua con Infusiones de Frutas
+                <center>
+<div class="container">
+  <div class="producto">
+    <img class="imagen" src="https://healinglifestyles.com/wp-content/uploads/2017/01/fruitwater.jpg"width="170"height="170" alt="Producto">
+    <div class="info-overlay">
+      <span class="precio"> $25 MXN</span>
+      <p class="descripcion">Agua refrescante con rodajas de frutas, hierbas y especias, perfecta para hidratarse de manera deliciosa y natural.</p>
+    </div> </div></div>
+<button class="add-to-cart" data-name="Agua con Infusiones de Frutas" data-price="25">Agregar al Carrito</button>
+</center>
+<main class="o">
+            <h2>Kombucha
+                <center>
+<div class="container">
+  <div class="producto">
+    <img class="imagen" src="https://th.bing.com/th/id/R.abc13cbe45938d6caf837e25f647d4d9?rik=u1kFqRc5eB1ffA&riu=http%3a%2f%2f1.bp.blogspot.com%2f-aSuoXAlQKzc%2fUgz615dsPpI%2fAAAAAAAAF8s%2f24Li5JiHuwo%2fs1600%2fkombucha%2b1.jpg&ehk=Le2ZrdIfEi%2feNS9R0kQ26sN%2fVMbhS6KIV4gN2QrX%2bTU%3d&risl=&pid=ImgRaw&r=0"width="170"height="170" alt="Producto">
+    <div class="info-overlay">
+      <span class="precio"> $50 MXN</span>
+      <p class="descripcion">Bebida fermentada a base de té, conocida por sus beneficios probióticos que promueven la salud digestiva.</p>
+    </div> </div></div>
+<button class="add-to-cart" data-name="Kombucha" data-price="50">Agregar al Carrito</button>
+</center>
+</main>
+            <h2>Jugo de Vegetales</h2>
+            <center>
+<div class="container">
+  <div class="producto">
+    <img class="imagen" src="https://th.bing.com/th/id/OIP.zkFx1rCiHTxswHcjeIw2HwHaEi?rs=1&pid=ImgDetMain"width="170"height="170" alt="Producto">
+    <div class="info-overlay">
+      <span class="precio"> $40 MXN</span>
+      <p class="descripcion">Jugos frescos hechos de una mezcla de vegetales como zanahoria, espinaca y apio, ideales para una opción nutritiva y revitalizante.</p>
+    </div> </div></div>
+<button class="add-to-cart" data-name="Jugo de Vegetales" data-price="40">Agregar al Carrito</button>
+</center>
+</main>
+        </ul>
+       <button onclick="goToHome()" style="background: none; border: none; cursor: pointer;">
+    <img src="https://cdn.icon-icons.com/icons2/1744/PNG/512/3643769-building-home-house-main-menu-start_113416.png" alt="Home" width="50">
+</button>
+    </div>
+    <div class="info" id="info-pasteles">
+          <main class="o">
+        <h2>Pasteles y Tartas</h2>
+       
+            <h2>Pastel de Chocolate
+                <center>
+<div class="container">
+  <div class="producto">
+    <img class="imagen" src="https://tallypress.com/wp-content/uploads/2017/11/7-irresistible-chocolate-cakes-you-should-try-in-klang-valley.jpg"width="170"height="170" alt="Producto">
+    <div class="info-overlay">
+      <span class="precio"> $50 MXN</span>
+      <p class="descripcion">Un clásico pastel rico y húmedo hecho con chocolate, perfecto para los amantes del chocolate.</p>
+    </div> </div></div>
+<button class="add-to-cart" data-name="Pastel de Chocolate" data-price="50">Agregar al Carrito</button>
+</center>
+            <h2>Tarta de Queso
+     <center>
+<div class="container">
+  <div class="producto">
+    <img class="imagen" src="https://th.bing.com/th/id/OIP.V0HaLD8oJtIqeSSZA10QvwHaEK?rs=1&pid=ImgDetMain"width="170"height="170" alt="Producto">
+    <div class="info-overlay">
+      <span class="precio"> $60 MXN</span>
+      <p class="descripcion">Un postre cremoso hecho a base de queso crema, con una base de galleta, ideal para una indulgencia deliciosa.</p>
+    </div> </div></div>
+<button class="add-to-cart" data-name="Tarta de Queso" data-price="60">Agregar al Carrito</button>
+</center>
+
+            <h2>Tarta de Manzana
+<center>
+<div class="container">
+  <div class="producto">
+    <img class="imagen" src="https://th.bing.com/th/id/OIP.QhP2rk1i5jHkiAwuc_XLuAHaEK?rs=1&pid=ImgDetMain"width="170"height="170" alt="Producto">
+    <div class="info-overlay">
+      <span class="precio">$55 MXN</span>
+      <p class="descripcion">Tarta rellena de manzanas cocidas y especias, cubierta con una masa crujiente, perfecta para disfrutar con un café.</p>
+    </div> </div></div>
+<button class="add-to-cart" data-name="Tarta de Manzanas" data-price="55">Agregar al Carrito</button>
+</center>
+
+            <h2>Tarta de Limón
+                <center>
+<div class="container">
+  <div class="producto">
+    <img class="imagen" src="https://th.bing.com/th/id/R.945a67f9576fdeddd35be0f123699c6b?rik=IUd%2bF7ROdxOwJg&pid=ImgRaw&r=0"width="170"height="170" alt="Producto">
+    <div class="info-overlay">
+      <span class="precio"> $50 MXN</span>
+      <p class="descripcion">Tarta con relleno de crema de limón y a veces cubierta con merengue, una opción refrescante y dulce.</p>
+    </div> </div></div>
+<button class="add-to-cart" data-name="Tarta de Limón" data-price="50">Agregar al Carrito</button>
+</center>
+
+         
+            <h2>Tarta de Zanahoria</h2>
+            <center>
+<div class="container">
+  <div class="producto">
+    <img class="imagen" src="https://cocinachic.net/wp-content/uploads/2014/01/rebanada-de-pastel-de-zanahoria-en-fondo-naranja.jpg"width="170"height="170" alt="Producto">
+    <div class="info-overlay">
+      <span class="precio"> $55 MXN</span>
+      <p class="descripcion">Pastel hecho con zanahorias ralladas, especias y a menudo cubierto con glaseado de queso crema, ideal para una merienda reconfortante.</p>
+    </div> </div></div>
+<button class="add-to-cart" data-name="Tarta de Zanahoria" data-price="55">Agregar al Carrito</button>
+</center></main>
+
+ <button onclick="goToHome()" style="background: none; border: none; cursor: pointer;">
+    <img src="https://cdn.icon-icons.com/icons2/1744/PNG/512/3643769-building-home-house-main-menu-start_113416.png" alt="Home" width="50">
+</button>
+    </div>
+    <div class="info" id="info-galletas">
+        <main class="o">
+        <h2>Galletas y Brownies</h2>
+ 
+           <h2>Galletas de Chocolate
+            <center>
+<div class="container">
+  <div class="producto">
+    <img class="imagen" src="https://th.bing.com/th/id/OIP.9xopZag5-UTmz40GZhPXcQHaET?rs=1&pid=ImgDetMain"width="170"height="170" alt="Producto">
+    <div class="info-overlay">
+      <span class="precio"> $20 MXN</span>
+      <p class="descripcion">Galletas crujientes y masticables con trozos de chocolate, perfectas para acompañar con un vaso de leche o café.</p>
+    </div> </div></div>
+<button class="add-to-cart" data-name="Galletas de Chocolate" data-price="20">Agregar al Carrito</button>
+</center>
+
+            <h2>Brownies
+                <center>
+<div class="container">
+  <div class="producto">
+    <img class="imagen" src="https://lifemadesimplebakes.com/wp-content/uploads/2014/06/brownies-resize-7.jpg"width="170"height="170" alt="Producto">
+    <div class="info-overlay">
+      <span class="precio"> $35 MXN</span>
+      <p class="descripcion">Postre denso y fudgy hecho con chocolate y a menudo nueces, ideal para los amantes del chocolate intenso.</p>
+    </div> </div></div>
+<button class="add-to-cart" data-name="Brownies" data-price="35">Agregar al Carrito</button>
+</center>
+            <h2>Galletas de Avena
+                <center>
+<div class="container">
+  <div class="producto">
+    <img class="imagen" src="https://th.bing.com/th/id/OIP.i1Ih-Hwjd7rhEqt4mn2msAHaFj?rs=1&pid=ImgDetMain"width="170"height="170" alt="Producto">
+    <div class="info-overlay">
+      <span class="precio"> $20 MXN</span>
+      <p class="descripcion">Galletas hechas con avena, a veces con pasas o chispas de chocolate, una opción deliciosa y un poco más saludable.</p>
+    </div> </div></div>
+<button class="add-to-cart" data-name="Galletas de Avena" data-price="20">Agregar al Carrito</button>
+</center>
+
+            <h2>Macarons
+                <center>
+<div class="container">
+  <div class="producto">
+    <img class="imagen" src="https://th.bing.com/th/id/OIP.uHWjAnrroOudj8jl9602pgHaEZ?rs=1&pid=ImgDetMain"width="170"height="170" alt="Producto">
+    <div class="info-overlay">
+      <span class="precio"> $25 MXN</span>
+      <p class="descripcion">galleta hechas de harina de almendra, claras de huevo y azúcar, con relleno de ganache, mantequilla o mermelada, perfectas para un capricho elegante y sofisticado.</p>
+    </div> </div></div>
+<button class="add-to-cart" data-name="Macarons" data-price="25">Agregar al Carrito</button>
+</center></main>
+            </h2>
+     
+       <button onclick="goToHome()" style="background: none; border: none; cursor: pointer;">
+    <img src="https://cdn.icon-icons.com/icons2/1744/PNG/512/3643769-building-home-house-main-menu-start_113416.png" alt="Home" width="50">
+</button>
+    </div>
+    <div class="info" id="info-muffins">
+        <main class="o">
+            <h2>Muffins y Cupcakes</h2>
+
+        <h2>Muffins de Arándanos
+             <center>
+<div class="container">
+  <div class="producto">
+    <img class="imagen" src="https://th.bing.com/th/id/OIP.0oV2Kh4vwVhQjZxu1p1bxQHaE8?rs=1&pid=ImgDetMain"width="170"height="170" alt="Producto">
+    <div class="info-overlay">
+      <span class="precio"> $30 MXN</span>
+      <p class="descripcion"> Muffins suaves y esponjosos con arándanos frescos, perfectos para un desayuno rápido o una merienda.</p>
+    </div> </div></div>
+<button class="add-to-cart" data-name="Muffins de Arándanos" data-price="30">Agregar al Carrito</button>
+</center>
+
+            <h2>Muffins de Plátano y Nueces
+                 <center>
+<div class="container">
+  <div class="producto">
+    <img class="imagen" src="https://th.bing.com/th/id/R.a9666ece0e42f722a38b47301f46d387?rik=bx%2fzhR1Cl4MS7A&pid=ImgRaw&r=0"width="170"height="170" alt="Producto">
+    <div class="info-overlay">
+      <span class="precio"> $30 MXN</span>
+      <p class="descripcion">Muffins húmedos hechos con puré de plátano y nueces, una opción deliciosa y nutritiva para cualquier momento del día.</p>
+    </div> </div></div>
+<button class="add-to-cart" data-name="Muffins de Plátano y Nueces" data-price="30">Agregar al Carrito</button>
+</center>
+
+            <h2>Cupcakes de Vainilla o Chocolate
+ <center>
+<div class="container">
+  <div class="producto">
+    <img class="imagen" src="https://th.bing.com/th/id/OIP.WNSyZr6j8fI9S0w8H5BVrAHaE5?rs=1&pid=ImgDetMain"width="170"height="170" alt="Producto">
+    <div class="info-overlay">
+      <span class="precio"> $35 MXN</span>
+      <p class="descripcion"> Pequeños pasteles individuales cubiertos con glaseado, disponibles en sabores de vainilla o chocolate, perfectos para un antojo dulce y festivo.</p>
+    </div> </div></div>
+<button class="add-to-cart" data-name="Cupcakes de Vainilla o Chocolate" data-price="35">Agregar al Carrito</button>
+</center></main>
+            </h2>
+        
+        <button onclick="goToHome()" style="background: none; border: none; cursor: pointer;">
+    <img src="https://cdn.icon-icons.com/icons2/1744/PNG/512/3643769-building-home-house-main-menu-start_113416.png" alt="Home" width="50">
+</button>
+    </div>
+    <div class="info" id="info-clasicos">
+        <main class="o">
+            <h2>Postres Clásicos y Tradicionales</h2>
+       
+            <h2>Tiramisu
+                 <center>
+<div class="container">
+  <div class="producto">
+    <img class="imagen" src="https://th.bing.com/th/id/OIP.i0EkOplXb2Y8jXa82DnpRQHaLH?rs=1&pid=ImgDetMain"width="170"height="170" alt="Producto">
+    <div class="info-overlay">
+      <span class="precio"> $60 MXN</span>
+      <p class="descripcion">Postre italiano hecho con capas de bizcochos empapados en café, mascarpone y cacao en polvo, ideal para los amantes del café y los postres cremosos.</p>
+    </div> </div></div>
+<button class="add-to-cart" data-name="Tiramisu" data-price="50">Agregar al Carrito</button>
+</center>
+
+            <h2>Crème Brûlée
+                 <center>
+<div class="container">
+  <div class="producto">
+    <img class="imagen" src="https://th.bing.com/th/id/OIP.1Xc5cFVVnIY6b-rACqGqeQHaE7?rs=1&pid=ImgDetMain"width="170"height="170" alt="Producto">
+    <div class="info-overlay">
+      <span class="precio"> $65 MXN</span>
+      <p class="descripcion">Postre francés de crema pastelera con una capa de azúcar caramelizada, perfecto para una experiencia dulce y crujiente.</p>
+    </div> </div></div>
+<button class="add-to-cart" data-name="Crème Brûlée" data-price="50">Agregar al Carrito</button>
+</center>
+            <h2>Panna Cotta
+                 <center>
+<div class="container">
+  <div class="producto">
+    <img class="imagen" src="https://th.bing.com/th/id/OIP.mQJfwY4sJCtpboGKCb078gHaE8?rs=1&pid=ImgDetMain"width="170"height="170" alt="Producto">
+    <div class="info-overlay">
+      <span class="precio"> $55 MXN</span>
+      <p class="descripcion">Postre italiano de nata cocida y gelatina, a menudo servido con frutas frescas o salsa de caramelo, una opción ligera y elegante.</p>
+    </div> </div></div>
+<button class="add-to-cart" data-name="Panna Cotta" data-price="55">Agregar al Carrito</button>
+</center>
+
+            <h2>Flan
+                 <center>
+<div class="container">
+  <div class="producto">
+    <img class="imagen" src="https://th.bing.com/th/id/OIP.sYIUxSfYzVQBogPqxGdh6gHaFj?rs=1&pid=ImgDetMain"width="170"height="170" alt="Producto">
+    <div class="info-overlay">
+      <span class="precio"> $50 MXN</span>
+      <p class="descripcion">Un clásico pastel rico y húmedo hecho con chocolate, perfecto para los amantes del chocolate.</p>
+    </div> </div></div>
+<button class="add-to-cart" data-name="Pastel de Chocolate" data-price="50">Agregar al Carrito</button>
+</center></main>
+            </h2> 
+       
+<button onclick="goToHome()" style="background: none; border: none; cursor: pointer;">
+    <img src="https://cdn.icon-icons.com/icons2/1744/PNG/512/3643769-building-home-house-main-menu-start_113416.png" alt="Home" width="50">
+</button>
+    </div>
+    <div class="info" id="info-bolleria">
+        <main class="o">
+            <h2>Bollería y Panadería</h2>
+      
+              <h2>Croissants
+                 <center>
+<div class="container">
+  <div class="producto">
+    <img class="imagen" src="https://th.bing.com/th/id/OIP._NRJfKZ0twQKDaljLKfvLAHaEt?rs=1&pid=ImgDetMain"width="170"height="170" alt="Producto">
+    <div class="info-overlay">
+      <span class="precio"> $30 MXN</span>
+      <p class="descripcion">Hojaldre francés en forma de media luna, crujiente y mantecoso, a veces relleno de chocolate o almendras, perfecto para un desayuno o merienda elegante.</p>
+    </div> </div></div>
+<button class="add-to-cart" data-name="Croissants" data-price="30">Agregar al Carrito</button>
+</center>
+
+            <h2>Pain au Chocolat
+                 <center>
+<div class="container">
+  <div class="producto">
+    <img class="imagen" src="https://th.bing.com/th/id/OIP.IoXc-HCOScOol-08VRfUBwHaE8?rs=1&pid=ImgDetMain"width="170"height="170" alt="Producto">
+    <div class="info-overlay">
+      <span class="precio"> $35 MXN</span>
+      <p class="descripcion">Hojaldre relleno de chocolate, una deliciosa opción para los amantes del chocolate y la bollería.
+</p>
+    </div> </div></div>
+<button class="add-to-cart" data-name="Pain au Chocolat" data-price="35">Agregar al Carrito</button>
+</center>
+
+            <h2>Danish
+                 <center>
+<div class="container">
+  <div class="producto">
+    <img class="imagen" src="https://th.bing.com/th/id/OIP.KQaYSjM6qYZfTf_SPQ3QXgHaE7?rs=1&pid=ImgDetMain"width="170"height="170" alt="Producto">
+    <div class="info-overlay">
+      <span class="precio"> $45 MXN</span>
+      <p class="descripcion">Bollos de hojaldre rellenos de frutas, crema pastelera o queso, ideales para una indulgencia dulce y sofisticada.</p>
+    </div> </div></div>
+<button class="add-to-cart" data-name="Danish" data-price="45">Agregar al Carrito</button>
+</center></main>
+            </h2>
+        
+      <button onclick="goToHome()" style="background: none; border: none; cursor: pointer;">
+    <img src="https://cdn.icon-icons.com/icons2/1744/PNG/512/3643769-building-home-house-main-menu-start_113416.png" alt="Home" width="50">
+</button>
+    </div>
+    <div class="info" id="info-saludablesPostres">
+        <main class="o">
+            <h2>Postres Saludables</h2>
+       <ul>
+           <h2>Barritas de Granola
+             <center>
+<div class="container">
+  <div class="producto">
+    <img class="imagen" src="https://th.bing.com/th/id/OIP.Czc30tIjc53uTIuoViopfwHaFj?rs=1&pid=ImgDetMain"width="170"height="170" alt="Producto">
+    <div class="info-overlay">
+      <span class="precio"> $20 MXN</span>
+      <p class="descripcion"> Barritas hechas de avena, nueces, miel y otros ingredientes saludables, perfectas para un snack rápido y nutritivo.</p>
+    </div> </div></div>
+<button class="add-to-cart" data-name="Barritas de Granola" data-price="20">Agregar al Carrito</button>
+</center>
+
+            <h2>Yogur con Frutas y Granola
+                <center>
+<div class="container">
+  <div class="producto">
+    <img class="imagen" src="https://th.bing.com/th/id/OIP.kwSea2Kif0CONrWET-4_uQHaE6?rs=1&pid=ImgDetMain"width="170"height="170" alt="Producto">
+    <div class="info-overlay">
+      <span class="precio">$35 MXN</span>
+      <p class="descripcion">Taza de yogur cremoso servida con frutas frescas y granola crujiente, ideal para un desayuno ligero o una merienda saludable.</p>
+    </div> </div></div>
+<button class="add-to-cart" data-name="Yogur con Frutas y Granola" data-price="35">Agregar al Carrito</button>
+</center>
+
+            <h2>Bolas Energéticas</h2>
+            <center>
+<div class="container">
+  <div class="producto">
+    <img class="imagen" src="https://th.bing.com/th/id/OIP.IeMpgHk63YsyGDvH_a7oBwHaFj?rs=1&pid=ImgDetMain"width="170"height="170" alt="Producto">
+    <div class="info-overlay">
+      <span class="precio"> $25 MXN</span>
+      <p class="descripcion">Bolitas hechas de dátiles, nueces, avena y otros ingredientes nutritivos, una opción perfecta para un impulso de energía natural y saludable.</p>
+    </div> </div></div>
+<button class="add-to-cart" data-name="Bolas Energéticas" data-price="25">Agregar al Carrito</button>
+</center></main>
+        
+        <button onclick="goToHome()" style="background: none; border: none; cursor: pointer;">
+    <img src="https://cdn.icon-icons.com/icons2/1744/PNG/512/3643769-building-home-house-main-menu-start_113416.png" alt="Home" width="50">
+</button>
+    </div>
+    <div class="info" id="info-helados">
+        <main class="o">
+            <h2>Helados y sorbetes</h2>
+     
+           <h2>Helado
+            <center>
+<div class="container">
+  <div class="producto">
+    <img class="imagen" src="https://th.bing.com/th/id/OIP.aHC9UCGIKbA2iw_e4f-zoQHaEo?rs=1&pid=ImgDetMain"width="170"height="170" alt="Producto">
+    <div class="info-overlay">
+      <span class="precio"> $40 MXN</span>
+      <p class="descripcion">Deliciosas y cremosas bolas de helado en una variedad de sabores como vainilla, chocolate, fresa, y más, perfectas para refrescarte y darte un gusto dulce.</p>
+    </div> </div></div>
+<button class="add-to-cart" data-name="Helado" data-price="40">Agregar al Carrito</button>
+</center>
+
+            <h2>Sorbetes
+                <center>
+<div class="container">
+  <div class="producto">
+    <img class="imagen" src="https://th.bing.com/th/id/OIP.6Sa1S0hNXydmyKgli9saewHaE8?rs=1&pid=ImgDetMain"width="170"height="170" alt="Producto">
+    <div class="info-overlay">
+      <span class="precio"> $35 MXN</span>
+      <p class="descripcion">Postres fríos y refrescantes hechos de puré de frutas, agua y azúcar, disponibles en sabores como limón, mango, frambuesa, y otros, ideales para una opción ligera y sin lácteos.</p>
+    </div> </div></div>
+<button class="add-to-cart" data-name="Sorbetes" data-price="35">Agregar al Carrito</button>
+</center>
+</main>
+            </h2>
+        
+        <button onclick="goToHome()" style="background: none; border: none; cursor: pointer;">
+    <img src="https://cdn.icon-icons.com/icons2/1744/PNG/512/3643769-building-home-house-main-menu-start_113416.png" alt="Home" width="50">
+</button>
+    </div>
+    <div class="info" id="info-sandwiches">
+        <main class="o">
+            <h2>Sándwiches y Bocadillos</h2>
+            <h2>Sándwich Club
+                 <center>
+<div class="container">
+  <div class="producto">
+    <img class="imagen" src="https://th.bing.com/th/id/OIP.dEyEvqfGH62TNJfiOrLy2gHaE8?rs=1&pid=ImgDetMain"width="170"height="170" alt="Producto">
+    <div class="info-overlay">
+      <span class="precio"> $70 MXN</span>
+      <p class="descripcion">Tres capas de pan tostado con pollo, tocino, lechuga, tomate y mayonesa, un sándwich clásico y sustancioso.</p>
+    </div> </div></div>
+<button class="add-to-cart" data-name="Sándwich Club" data-price="70">Agregar al Carrito</button>
+</center>
+
+<h2>Panini
+     <center>
+<div class="container">
+  <div class="producto">
+    <img class="imagen" src="https://th.bing.com/th/id/OIP.GrvoJJm3G4Fen4pUjBncoQHaE8?rs=1&pid=ImgDetMain"width="170"height="170" alt="Producto">
+    <div class="info-overlay">
+      <span class="precio"> $65 MXN</span>
+      <p class="descripcion">Sándwich prensado a la parrilla, a menudo con ingredientes como queso, jamón, tomate y albahaca, ideal para una comida sabrosa y reconfortante.</p>
+    </div> </div></div>
+<button class="add-to-cart" data-name="Panini" data-price="65">Agregar al Carrito</button>
+</center>
+    <h2>Wraps
+         <center>
+<div class="container">
+  <div class="producto">
+    <img class="imagen" src="https://th.bing.com/th/id/R.d648a9ee57fec16867ae7942d305c8a6?rik=N6Xb3hvXCB%2f%2bGw&pid=ImgRaw&r=0"width="170"height="170" alt="Producto">
+    <div class="info-overlay">
+      <span class="precio"> $65 MXN</span>
+      <p class="descripcion">Tortillas de trigo rellenas de pollo, verduras, hummus y otros ingredientes frescos, perfectas para una opción ligera y saludable.</p>
+    </div> </div></div>
+<button class="add-to-cart" data-name="Wraps" data-price="65">Agregar al Carrito</button>
+</center>
+<h2>Bocadillo de Jamón y Queso
+     <center>
+<div class="container">
+  <div class="producto">
+    <img class="imagen" src="https://th.bing.com/th/id/OIP.Fgw-j26w-xqAbm1GpOrOIQHaF6?rs=1&pid=ImgDetMain"width="170"height="170" alt="Producto">
+    <div class="info-overlay">
+      <span class="precio"> $50 MXN</span>
+      <p class="descripcion">Clásico sándwich con jamón y queso, a menudo servido caliente para una experiencia sencilla y deliciosa.</p>
+    </div> </div></div>
+<button class="add-to-cart" data-name="Bocadillo de Jamón y Queso" data-price="50">Agregar al Carrito</button>
+</center>
+
+<h2>Sándwich de Pollo
+     <center>
+<div class="container">
+  <div class="producto">
+    <img class="imagen" src="https://th.bing.com/th/id/OIP.BGXaD5g4VEdYjahzecP5RwHaGU?rs=1&pid=ImgDetMain"width="170"height="170" alt="Producto">
+    <div class="info-overlay">
+      <span class="precio"> $65 MXN</span>
+      <p class="descripcion">Pollo asado o a la parrilla con lechuga, tomate y mayonesa en pan ciabatta o integral, una opción nutritiva y sabrosa para el almuerzo.</p>
+    </div> </div></div>
+<button class="add-to-cart" data-name="Sándwich de Pollo" data-price="65">Agregar al Carrito</button>
+</center></main>
+        </h2>
+        <button onclick="goToHome()" style="background: none; border: none; cursor: pointer;">
+    <img src="https://cdn.icon-icons.com/icons2/1744/PNG/512/3643769-building-home-house-main-menu-start_113416.png" alt="Home" width="50">
+</button>
+    </div>
+    <div class="info" id="info-ensaladas">
+        <main class="o">
+            <h2>Ensaladas</h2>
+   
+            <h2>Ensalada César
+                 <center>
+<div class="container">
+  <div class="producto">
+    <img class="imagen" src="https://th.bing.com/th/id/OIP.iigJwaXQFeez9bWPj11OzwHaE6?rs=1&pid=ImgDetMain"width="170"height="170" alt="Producto">
+    <div class="info-overlay">
+      <span class="precio"> $80 MXN</span>
+      <p class="descripcion">Lechuga romana fresca con crutones crujientes, queso parmesano rallado y aderezo César cremoso, a menudo acompañada de pollo a la parrilla.</p>
+    </div> </div></div>
+<button class="add-to-cart" data-name="Ensalada César" data-price="80">Agregar al Carrito</button>
+</center>
+
+ <h2>Ensalada de Quinoa
+     <center>
+<div class="container">
+  <div class="producto">
+    <img class="imagen" src="https://th.bing.com/th/id/R.cbb4d1f6aebf35bc5520e62c36f4ac74?rik=8nIzi10grxWh6Q&riu=http%3a%2f%2f1.bp.blogspot.com%2f-9cKcUVA5wrU%2fVUiK85AiSQI%2fAAAAAAAATl8%2fLG6oH7HhyvU%2fs1600%2fIMG_6867.JPG&ehk=xNzoK%2fTMHdP5K%2flNIJxlqSP8%2bGZ1yRaHPzQMKb4l%2f8U%3d&risl=&pid=ImgRaw&r=0"width="170"height="170" alt="Producto">
+    <div class="info-overlay">
+      <span class="precio"> $75 MXN</span>
+      <p class="descripcion">Quinoa cocida mezclada con verduras frescas, aguacate en cubos y aderezo de limón.</p>
+    </div> </div></div>
+<button class="add-to-cart" data-name="Ensalada de Quinoa" data-price="75">Agregar al Carrito</button>
+</center>
+<h2>Ensalada Griega
+     <center>
+<div class="container">
+  <div class="producto">
+    <img class="imagen" src="https://th.bing.com/th/id/OIP.7ke4l-rK9Hx84QiAMuT-5wHaE8?rs=1&pid=ImgDetMain"width="170"height="170" alt="Producto">
+    <div class="info-overlay">
+      <span class="precio"> $85 MXN</span>
+      <p class="descripcion">Mezcla de pepino, tomate, cebolla roja, aceitunas Kalamata y queso feta desmenuzado, aderezada con aceite de oliva, limón y orégano, una ensalada fresca y llena de ingredientes mediterráneos.</p>
+    </div> </div></div>
+<button class="add-to-cart" data-name="Ensalada Griega" data-price="85">Agregar al Carrito</button>
+</center>
+
+ <h2>Ensalada de Espinacas y Fresas
+     <center>
+<div class="container">
+  <div class="producto">
+    <img class="imagen" src="https://th.bing.com/th/id/R.543c566f0dd190931d40685e72eacacd?rik=4TjUdNrfgxsYhg&pid=ImgRaw&r=0"width="170"height="170" alt="Producto">
+    <div class="info-overlay">
+      <span class="precio"> $80 MXN</span>
+      <p class="descripcion">Espinacas frescas con fresas rebanadas, nueces tostadas y queso de cabra desmenuzado, aderezada con vinagreta de balsámico para una combinación deliciosa de sabores dulces y salados.</p>
+    </div> </div></div>
+<button class="add-to-cart" data-name="Ensalada de Espinacas y Fresas" data-price="80">Agregar al Carrito</button>
+</center></main>
+           </h2>
+        
+       <button onclick="goToHome()" style="background: none; border: none; cursor: pointer;">
+    <img src="https://cdn.icon-icons.com/icons2/1744/PNG/512/3643769-building-home-house-main-menu-start_113416.png" alt="Home" width="50">
+</button>
+    </div>
+    
+    <div class="info" id="info-Brunch">
+        <main class="o"><h2>Opciones de Desayuno para el Almuerzo (Brunch)</h2>
+       
+            <h2>Huevos Benedictinos
+                 <center>
+<div class="container">
+  <div class="producto">
+    <img class="imagen" src="https://th.bing.com/th/id/OIP.Z27Ee8n-HH-OqNfjffcOzAHaE7?rs=1&pid=ImgDetMain"width="170"height="170" alt="Producto">
+    <div class="info-overlay">
+      <span class="precio"> $90 MXN</span>
+      <p class="descripcion">Muffin inglés con jamón, huevo pochado y salsa holandesa.</p>
+    </div> </div></div>
+<button class="add-to-cart" data-name="Huevos Benedictinos" data-price="90">Agregar al Carrito</button>
+</center>
+
+<h2>Tostadas de Aguacate
+     <center>
+<div class="container">
+  <div class="producto">
+    <img class="imagen" src="https://th.bing.com/th/id/OIP.uQKqAJ_ilinfZkvpafyr3wHaE7?rs=1&pid=ImgDetMain"width="170"height="170" alt="Producto">
+    <div class="info-overlay">
+      <span class="precio"> $70 MXN</span>
+      <p class="descripcion"> Pan con puré de aguacate, tomate y cilantro.</p>
+    </div> </div></div>
+<button class="add-to-cart" data-name="Tostadas de Aguacate" data-price="70">Agregar al Carrito</button>
+</center>
+
+<h2>Omelette
+ <center>
+<div class="container">
+  <div class="producto">
+    <img class="imagen" src="https://th.bing.com/th/id/OIP.nq_bQTn3cdbzCYWpnK0hFAHaEr?rs=1&pid=ImgDetMain"width="170"height="170" alt="Producto">
+    <div class="info-overlay">
+      <span class="precio"> $80 MXN</span>
+      <p class="descripcion">Huevos batidos con relleno de queso, champiñones y espinacas.</p>
+    </div> </div></div>
+<button class="add-to-cart" data-name="Omelette" data-price="80">Agregar al Carrito</button>
+</center></main>
+</h2>
+    
+     <button onclick="goToHome()" style="background: none; border: none; cursor: pointer;">
+    <img src="https://cdn.icon-icons.com/icons2/1744/PNG/512/3643769-building-home-house-main-menu-start_113416.png" alt="Home" width="50">
+</button>
+    </div>
+
+<div class="cart" id="cart">
+        <h2>Carrito de Compras</h2>
+        <ul id="cart-items"></ul>
+        <p>Total: $<span id="total-price">0.00</span></p>
+        <button id="pay-button">Pagar</button>
+    </div>
+
+    <script>
+     function showInfo(infoId) {
+            const content = document.getElementById('content');
+            content.style.display = 'none';
+            
+            const infoDivs = document.querySelectorAll('.info');
+            infoDivs.forEach(div => {
+                div.classList.remove('active', 'fade-in');
+            });
+
+            const infoDiv = document.getElementById('info-' + infoId);
+            infoDiv.classList.add('active', 'fade-in');
+        }
+
+        /*regresar al inicio boton xdxd*/
+            function goToHome() {
+        const content = document.getElementById('content');
+        const infoDivs = document.querySelectorAll('.info');
+        content.style.display = 'block';
+
+        infoDivs.forEach(div => {
+            div.classList.remove('active', 'fade-in');
+        });
+    }
+       function showInfo(infoId) {
+        const content = document.getElementById('content');
+        content.classList.add('fade-in-up');
+        content.style.display = 'none';
+
+        const infoDivs = document.querySelectorAll('.info');
+        infoDivs.forEach(div => {
+            div.classList.remove('active', 'fade-in');
+        });
+
+        const infoDiv = document.getElementById('info-' + infoId);
+        infoDiv.classList.add('active', 'fade-in');
+    }
+
+    /*carrito de compras*/
+    document.querySelectorAll('.add-to-cart').forEach(button => {
+    button.addEventListener('click', function() {
+        const name = this.getAttribute('data-name');
+        const price = parseFloat(this.getAttribute('data-price'));
+        
+        addItemToCart(name, price);
+    });
+});
+
+const cart = document.getElementById('cart');
+const cartItems = document.getElementById('cart-items');
+const totalPrice = document.getElementById('total-price');
+let total = 0;
+
+function addItemToCart(name, price) {
+    const listItem = document.createElement('li');
+    listItem.textContent = `${name} - $${price.toFixed(2)}`;
+    
+    const removeButton = document.createElement('button');
+    removeButton.textContent = 'Quitar';
+    removeButton.addEventListener('click', function() {
+        removeItemFromCart(listItem, price);
+    });
+    
+    listItem.appendChild(removeButton);
+    cartItems.appendChild(listItem);
+
+    total += price;
+    totalPrice.textContent = total.toFixed(2);
+
+    cart.style.display = 'block';
+}
+
+function removeItemFromCart(listItem, price) {
+    cartItems.removeChild(listItem);
+    total -= price;
+    totalPrice.textContent = total.toFixed(2);
+
+    if (total === 0) {
+        cart.style.display = 'none';
+    }
+}
+
+document.getElementById('pay-button').addEventListener('click', function() {
+    alert('Gracias por tu compra!');
+    cartItems.innerHTML = '';
+    total = 0;
+    totalPrice.textContent = total.toFixed(2);
+    cart.style.display = 'none';
+});
+    </script>
+
+</body>
+</html>
